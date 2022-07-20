@@ -3,17 +3,22 @@ from django.shortcuts import render
 from .forms import InputForm
 import subprocess
 import os
+from django.views.generic import CreateView
+from .models import Data_sc
 
 #def index(request):
 #    return HttpResponse("Hello Geeks")
 
+class data_createview(CreateView):
+    model = Data_sc
+    fields = ('input_field')
 
 # Create your views here.
 def index(request):
     context = {}
     context['form'] = InputForm()
-    print(request.GET)
-    results = request.GET.getlist('input_url')
+    print(request.POST)
+    results = request.POST.getlist('input_url')
     try:
         connector(results[0])
     except Exception as e:

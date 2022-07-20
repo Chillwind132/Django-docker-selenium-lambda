@@ -26,7 +26,7 @@ def index(request):
     return render(request, "home.html", context)
 
 def connector(site_url):
-    os.chdir("/home/mike/Desktop/Projects/docker-selenium-lambda")
+    os.chdir("/home/mike/Desktop/Projects/Django-docker-selenium-lambda/docker-selenium-lambda")
 
     command = "sls invoke --function screenshot_proc --raw --data "  # Space is mandatory
     #site_url = "https://www.example.com/"

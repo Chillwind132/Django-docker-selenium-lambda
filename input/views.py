@@ -73,7 +73,7 @@ def connector(site_url_list):
         url = re.findall('"([^"]*)"', str(stdout))
         urls.append(url[0])
         print(urls)
-        print("Done")
+        
     
     if os.path.exists(output_files):
         pass
@@ -90,7 +90,8 @@ def connector(site_url_list):
     with open('urls_data.json', 'w') as f:
          json.dump(jsonString, f)
 
-    
+
+    print("Done")
 
 def download(request):
     data = {}
@@ -102,7 +103,7 @@ def download(request):
         
 
     print(data)
-    for i in data:
+    for item in data:
 
         path = tmp + item
         if os.path.exists(path):

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +30,9 @@ ALLOWED_HOSTS = ['localhost',
   	         '127.0.0.1',
   	         '52.201.219.127']
   	         
-  	         
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
+
+
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None	         
 
 

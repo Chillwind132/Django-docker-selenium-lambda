@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['localhost',
   	         '127.0.0.1',
   	         '52.201.219.127']
   	         
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
+STATIC_ROOT = os.path.join(BASE_DIR, 'input/static') 
 
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None	         

@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['localhost',
   	         '52.201.219.127']
   	         
   	         
-  	         
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None	         
 
 
 # Application definition

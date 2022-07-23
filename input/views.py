@@ -90,7 +90,7 @@ def download(request):
     data = []
     data_updated = []
     tmp = "/tmp/"
-
+    os.chdir("/home/ubuntu/django-project/Django-docker-selenium-lambda/docker-lambda-selenium-backend")
     with open('urls_data.json', 'r') as f:
         d = json.load(f)
         data_string = str(d) 

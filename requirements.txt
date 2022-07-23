@@ -3,3 +3,4 @@ botocore
 Django
 img2pdf
 selenium
+django-crispy-forms

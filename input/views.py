@@ -111,7 +111,7 @@ def download(request):
         
     if os.path.exists('out.zip'):
         with open('out.zip', 'rb') as fh:
-            mime_type, _ = mimetypes.guess_type(file_path)
+            mime_type, _ = mimetypes.guess_type('out.zip')
             response = HttpResponse(fh, content_type=mime_type)
             response['Content-Disposition'] = "attachment; filename=out.zip"
             print("ZIP SENT TO CLIENT!")

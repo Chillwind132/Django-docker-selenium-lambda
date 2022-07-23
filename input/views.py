@@ -107,13 +107,14 @@ def download(request):
             name=str(file_path).replace("/tmp/","").strip()
 
             zipMe.write(file_path,arcname=name,compress_type=zipfile.ZIP_DEFLATED)   
-            print("done")
+            print("ZIPPED FILE")
         
     if os.path.exists('out.zip'):
         with open('out.zip', 'rb') as fh:
             mime_type, _ = mimetypes.guess_type(file_path)
             response = HttpResponse(fh, content_type=mime_type)
             response['Content-Disposition'] = "attachment; filename=out.zip"
+            print("ZIP SENT TO CLIENT!")
 
     return response #Return the final zip file to the client
 

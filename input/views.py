@@ -53,7 +53,7 @@ def connector(site_url_list):
     for item in site_url_list:
 
         time.sleep(0.2)
-        os.chdir("/home/mike/Desktop/Projects/Django-docker-selenium-lambda/docker-selenium-lambda")
+        os.chdir("/home/ubuntu/django-project/Django-docker-selenium-lambda/docker-lambda-selenium-backend")
 
         command = "sls invoke --function screenshot_proc --raw --data "  # Space is mandatory
         #site_url = "https://www.example.com/"

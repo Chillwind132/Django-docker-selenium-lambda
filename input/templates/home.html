@@ -23,22 +23,24 @@
     <title>Django People</title>    
   </head>
   <body>
-    {% load crispy_forms_tags %}  
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-8">
-        {% block content %}
-          <form action = "" method = "post">
-            {% csrf_token %}
-            
-            {{form|crispy}}
+    {% load crispy_forms_tags %}
+     
 
-            <button type="submit" class="btn btn-success" >Submit</button> 
-            </form>
-        {% endblock %}
+      <div class="container h-75">
+        <div class="row h-100 justify-content-center align-items-center">
+          <div class="col-8">
+          {% block content %}
+            <form action = "" method = "post">
+              {% csrf_token %}
+              
+              {{form|crispy}}
+
+              <button type="submit" class="btn btn-success" >Submit</button> 
+              </form>
+          {% endblock %}
+          </div>
         </div>
       </div>
-    </div>
-  
+   
   </body>
 </html>

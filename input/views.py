@@ -14,6 +14,7 @@ import json
 import time
 import zipfile
 
+
 s3_client = boto3.client('s3')
 s3_bucket = "stg-uploaded-screenshots-lambda"
 output_files = "/tmp"
@@ -30,9 +31,14 @@ def index(request):
     results = request.POST.getlist('input_url')
     try:
         results_list = results[0].split("\r\n")
+        print(results_list)
         for item in results_list:
-            output.append(item.strip())
-        print () #output is a list of final urls to convert
+            clean_item = item
+            if str(clean_item).strip() == '': #Check if there are any empty entries '', ignore if true
+                pass
+            else:
+                output.append(item.strip())
+        print (output) #output is a list of final urls to convert
 
         connector(output)
         context['done_flag'] = '1'
@@ -59,16 +65,16 @@ def connector(site_url_list):
         #site_url = "https://www.example.com/"
 
         
-        sls_invoke = subprocess.Popen(command + item,
+        sls_invoke = subprocess.Popen(command + str(item).strip(),
                                         shell=True,
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.PIPE)
         stdout, stderr = sls_invoke.communicate()
 
-        if error_string in str(stdout):
-            pass
+        if error_string in str(stdout).strip():
+            print("ERROR STRING DETECTED!!!!!")
         else:
-            url = re.findall('"([^"]*)"', str(stdout))
+            url = re.findall('"([^"]*)"', str(stdout).strip())
             urls.append(url[0])
         print(stdout)
         print(stderr)
@@ -115,8 +121,8 @@ def download(request):
             response = HttpResponse(fh, content_type=mime_type)
             response['Content-Disposition'] = "attachment; filename=out.zip"
             print("ZIP SENT TO CLIENT!")
-
-    return response #Return the final zip file to the client
+            return response
+     #Return the final zip file to the client
 
 
 

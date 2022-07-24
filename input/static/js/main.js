@@ -1,9 +1,8 @@
 function waitForElement(){
     if(typeof done_var !== "undefined"){
-        location.href = 'http://52.201.219.127/redirect';
+        window.open("http://52.201.219.127/redirect", '_blank');
         sleep(500);
         window.location.href = "http://52.201.219.127"; 
-        /*window.open("http://52.201.219.127/redirect", '_blank');*/
         console.log("Redirect triggered - log");
     }
     else{

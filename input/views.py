@@ -24,21 +24,21 @@ def index(request):
     output = []
     context = {}
     context['form'] = InputForm()
-    
-    results = request.POST.getlist('input_url')
-    try:
-        results_list = results[0].split("\r\n")
-        for item in results_list:
-            clean_item = item
-            if str(clean_item).strip() == '': # Check if there are any empty entries '', ignore if true
-                pass
-            else:
-                output.append(item.strip()) # Output is a list of final urls to convert
-        connector(output)
-        context['done_flag'] = '1' # Setting flag to trigger the download view
+    if request.method == 'POST':
+        results = request.POST.getlist('input_url')
+        try:
+            results_list = results[0].split("\r\n")
+            for item in results_list:
+                clean_item = item
+                if str(clean_item).strip() == '': # Check if there are any empty entries '', ignore if true
+                    pass
+                else:
+                    output.append(item.strip()) # Output is a list of final urls to convert
+            connector(output)
+            context['done_flag'] = '1' # Setting flag to trigger the download view
 
-    except Exception as e:
-        print(e)
+        except Exception as e:
+            print(e)
     return render(request, "home.html", context)
 
 def redirect_view(request):

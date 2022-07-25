@@ -1,46 +1,33 @@
-
 {% load static %}
-
 <!doctype html>
 <html lang="en">
   <head>
-    
     <script src="{% static '/js/main.js' %}"></script>   
     <script> 
-
     var done_var = {{ done_flag }};
-
-    waitForElement()
-    
+    waitForElement();
     </script>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-
-    <title>Django People</title>    
+    <title>Django People</title>  
   </head>
   <body>
     {% load crispy_forms_tags %}
-     
-
       <div class="container h-75">
         <div class="row h-100 justify-content-center align-items-center">
           <div class="col-8">
           {% block content %}
             <form action = "" method = "post">
               {% csrf_token %}
-              
               {{form|crispy}}
-
               <button type="submit" class="btn btn-success" >Submit</button> 
               </form>
           {% endblock %}
           </div>
         </div>
       </div>
-   
   </body>
 </html>

@@ -3,3 +3,4 @@ docker-lambda-selenium-backend/rootkey.csv
 docker-lambda-selenium-backend/urls_data.json
 docker-lambda-selenium-backend/experimental/connector.py
 docker-lambda-selenium-backend/experimental/S3_test.py
+input/.vscode

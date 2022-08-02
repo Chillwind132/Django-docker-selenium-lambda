@@ -32,7 +32,6 @@ def index(request):
     unique_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
 
     request.session['id'] = unique_id
-    print(request.session['id'])
 
     output = []
     context = {}
@@ -49,15 +48,9 @@ def index(request):
                     output.append(item.strip()) # Output is a list of final urls to convert
             connector(output, unique_id)
             context['done_flag'] = '1' # Setting flag to trigger the download view
-
         except Exception as e:
             print(e)
     return render(request, "home.html", context)
-
-def redirect_view(request):
-    response = redirect('/redirect-success/')
-    return response
-
 
 def connector(site_url_list, unique_id):
 
@@ -68,9 +61,7 @@ def connector(site_url_list, unique_id):
         time.sleep(0.2)
         os.chdir(prod)
 
-        if os.path.exists('data'):
-            pass
-        else:
+        if os.path.exists('data') is not True:
             os.mkdir('data')
 
         command = "sls invoke --function screenshot_proc --raw --data "  # Space is mandatory
@@ -131,9 +122,7 @@ def download(request):
             response['Content-Disposition'] = "attachment; filename=out.zip"
             print("ZIP SENT TO CLIENT")
             return response  # Return the final zip file to the client
-
     else:
-
         with zipfile.ZipFile(file_path_data,'w') as zipMe:  # Zip the files before transfer
             for file_path in data_updated:
 
@@ -152,7 +141,6 @@ def download(request):
                 print("ZIP SENT TO CLIENT")
                 cleanup(unique_id)
                 return response  # Return the final zip file to the client
-
 
 def cleanup(unique_id):
     if os.path.exists('data/' + unique_id + '.zip'):

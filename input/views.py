@@ -18,6 +18,9 @@ import zipfile
 import string
 import random
 import collections
+import string
+import random
+import collections
 
 s3_client = boto3.client('s3')
 s3_bucket = "stg-uploaded-screenshots-lambda"
@@ -101,11 +104,18 @@ def connector(site_url_list, unique_id):
 
             urls.setdefault(unique_id, []).append(url[0])
 
+            # Append a list of output files paths to later use for s3 data transfer
+
+            urls.setdefault(unique_id, []).append(url[0])
+
         print(stdout)
         print(stderr)
 
     for value in urls[unique_id]:
+    for value in urls[unique_id]:
 
+        file_name = output_files + '/' + value
+        s3_client.download_file(s3_bucket,value,file_name) # Download output files and save to /tmp
         file_name = output_files + '/' + value
         s3_client.download_file(s3_bucket,value,file_name) # Download output files and save to /tmp
 

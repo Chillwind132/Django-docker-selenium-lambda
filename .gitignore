@@ -5,3 +5,8 @@ docker-lambda-selenium-backend/experimental/connector.py
 docker-lambda-selenium-backend/experimental/S3_test.py
 docker-lambda-selenium-backend/data/*
 input/__pycache__/*
+db.sqlite3
+docker-lambda-selenium-backend/.serverless/*
+docker-lambda-selenium-backend/.serverless/cloudformation-template-update-stack.json
+docker-lambda-selenium-backend/.serverless/serverless-state.json
+input/__pycache__/*

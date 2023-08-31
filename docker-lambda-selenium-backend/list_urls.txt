@@ -1,2 +1,2 @@
 https://google.com
-https://www.bing.com/
+https://www.example.com/

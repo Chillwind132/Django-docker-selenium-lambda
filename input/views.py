@@ -7,6 +7,7 @@ from django.http import FileResponse
 from django.shortcuts import redirect
 from django.http import HttpResponse, Http404
 from datetime import datetime, timedelta
+from PIL import Image
 import subprocess
 import os
 import re
@@ -104,18 +105,12 @@ def connector(site_url_list, unique_id):
 
             urls.setdefault(unique_id, []).append(url[0])
 
-            # Append a list of output files paths to later use for s3 data transfer
-
-            urls.setdefault(unique_id, []).append(url[0])
 
         print(stdout)
         print(stderr)
 
     for value in urls[unique_id]:
-    for value in urls[unique_id]:
 
-        file_name = output_files + '/' + value
-        s3_client.download_file(s3_bucket,value,file_name) # Download output files and save to /tmp
         file_name = output_files + '/' + value
         s3_client.download_file(s3_bucket,value,file_name) # Download output files and save to /tmp
 
@@ -142,53 +137,53 @@ def delete_old_files(directory, age_minutes=15):
 
 def download(request, unique_id=None):
     try:
-        unique_id = request.session['id']
-        print('download unique_id:', unique_id)
+        if unique_id is None:
+            unique_id = request.session.get('id')
+            if unique_id is None:
+                raise ValueError("Unique ID not found in session")
 
-        data = []
-        data_updated = []
-        tmp = "/tmp/"
-
-        # Read json file with urls_data
-        json_file = f'data/urls_data{unique_id}.json'
+        json_file = os.path.join('data', f'urls_data{unique_id}.json')
         if not os.path.exists(json_file):
             raise FileNotFoundError(f"Json data file '{json_file}' not found")
 
         with open(json_file, 'r') as f:
-            d = json.load(f)
-            data = d[unique_id]
+            data = json.load(f).get(unique_id, [])
 
-        for item in data:
-            upd = os.path.join(tmp, item.strip())
-            data_updated.append(upd)
+        tmp = "/tmp/"
+        data_updated = [os.path.join(tmp, item.strip()) for item in data]
 
         file_name = f'{unique_id}.zip'
         file_path_data = os.path.join('data', file_name)
 
-        # Create the ZIP file
-        with zipfile.ZipFile(file_path_data, 'w') as zip_me:
+        # Create ZIP
+        with zipfile.ZipFile(file_path_data, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for file_path in data_updated:
-                name = os.path.basename(file_path)
-                zip_me.write(file_path, arcname=name, compress_type=zipfile.ZIP_DEFLATED)
-                print("ZIPPED FILE")
+                if os.path.exists(file_path):
+                    zipf.write(file_path, arcname=os.path.basename(file_path))
 
-        # Delete files older than 15 minutes in the 'data' directory
-        delete_old_files('data', age_minutes=15)
+                    # Convert PNG to PDF
+                    image = Image.open(file_path)
+                    if image.mode == "RGBA":
+                        image = image.convert("RGB")
 
-        # Transfer the ZIP file to the client
+                    pdf_path = os.path.join('data', f"{os.path.basename(file_path).replace('.png', '.pdf')}")
+                    image.save(pdf_path, "PDF")
+
+                    # Add PDF to ZIP
+                    zipf.write(pdf_path, arcname=os.path.basename(pdf_path))
+
+        # Serve ZIP
         if os.path.exists(file_path_data):
             with open(file_path_data, 'rb') as fh:
-                mime_type, _ = mimetypes.guess_type(file_path_data)
-                response = HttpResponse(fh, content_type=mime_type)
-                response['Content-Disposition'] = f'attachment; filename={file_name}'
-                print("ZIP SENT TO CLIENT")
+                response = HttpResponse(fh.read(), content_type="application/zip")
+                response['Content-Disposition'] = f'inline; filename={file_name}'
                 return response
-
         else:
             raise FileNotFoundError(f"ZIP file '{file_path_data}' not found")
 
+    except FileNotFoundError as e:
+        raise Http404(str(e))
     except Exception as e:
-        print(f"Download function error: {str(e)}")
-        raise Http404(f"Error: {str(e)}")  # Return a 404 error with a custom message if any error occurs
-    
+        # Log the exception
+        raise Http404(f"Error: {str(e)}")
 
